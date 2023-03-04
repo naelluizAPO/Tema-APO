@@ -1,0 +1,318 @@
+{%-liquid
+    assign arrow =  section.settings.arrow_active
+-%}
+
+<div class="announcement-bar" role="region" aria-label="{{ 'sections.header.announcement' | t }}" style="opacity: 0; visibility: hidden;">
+    <script>
+        if (window.announcementClosed) {
+            document.querySelector('.announcement-bar').remove();
+        }
+    </script>
+    <div class="container">
+        <div class="row" {% if section.blocks.size > 1 %}data-announcement-bar data-arrows="{{arrow}}"{% endif %}>
+            {% if section.settings.annou_countdown == blank %}
+                {%- for block in section.blocks -%}
+                    {%- case block.type -%}
+                        {%- when 'announcement' -%}
+                            {%- if block.settings.text != blank -%}
+                                <div class="announcement-bar__message text-center" id="{{block.id}}"  
+                                        style="--button-color-style: {{ block.settings.btn_color }};
+                                               --button-border-style: {{ block.settings.btn_border_color }};
+                                               --button-background-style: {% if block.settings.btn_bg_color_gradient != blank %}{{ block.settings.btn_bg_color_gradient }}{% else %}{{ block.settings.btn_bg_color }}{% endif %}">
+                                    {%- if block.settings.message_link != blank -%}
+                                        <a href="{{ block.settings.message_link }}" class="announcement-bar announcement-bar--link" aria-label="link" target="_blank">
+                                    {%- endif -%}
+                                        {{ block.settings.text }}
+                                    {%- if block.settings.message_link != blank -%}
+                                        </a>
+                                    {%- endif -%}
+                                </div>
+                            {%- endif -%}
+                    {%- endcase -%}
+                {%- endfor -%}
+            {% endif %}
+        </div>
+
+        {% if section.settings.top_message_text != blank %}
+            <div class="top-mesage-countdown">{{ section.settings.top_message_text }}</div>
+        {% endif %}
+
+        {% if section.settings.annou_countdown != blank %}
+            <div class="announcement-countdown countdown-block" data-countdown data-countdown-value="{{ section.settings.annou_countdown }}"></div>
+        {% endif %}
+
+        {% if section.settings.enable_close %}
+            <a href="#" class="announcement-close clearfix" data-close-announcement alt="{{ 'general.common.close' | t }}">
+                {% render 'icon-close' %}
+                {{ 'general.common.close' | t }}
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<style type="text/css">
+    .announcement-bar {
+        {% if section.settings.bg_image_announcement != blank %}
+            background-image: url({{ section.settings.bg_image_announcement | img_url: '2048x'}});
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        {% else %}
+            background: {% if section.settings.bg_color_text_gradient != blank %}{{ section.settings.bg_color_text_gradient }}{% else %}{{ section.settings.bg_color_text }}{% endif %};
+        {% endif %}
+    }
+
+    .banner-animation-1 .announcement-bar {
+        transition: opacity 250ms ease-in;
+    }
+
+    {% if section.settings.bg_image_announcement != blank %}
+        .announcement-bar .container{
+            min-height: 125px;
+        }
+    {% endif %}
+
+    .announcement-bar__message, .announcement-bar__message .message, .announcement-bar__message .message a, .announcement-bar__message p, .top-mesage-countdown {
+        color: {{ section.settings.color_text }};
+        font-size: {{ section.settings.font_size_text | append: 'px' }};
+        {% unless section.settings.enable_close %}
+            letter-spacing: 0;
+        {% endunless %}
+    }
+
+    .announcement-bar .announcement-close svg {
+        fill: {{ section.settings.color_text }};
+    }
+
+    .announcement-bar .announcement-countdown .clock-item{
+        color: {{ section.settings.color_countdown_text }};
+        border: 1px solid {{ section.settings.border_color_countdown }};
+        background-color: {{ section.settings.bg_color_countdown }};
+    }
+
+    .announcement-bar .announcement-countdown .clock-item:before{
+        color: {{ section.settings.color_text }};
+    }
+
+    {% if arrow == true %}
+        .announcement-bar .row{
+            max-width: 38%;
+            margin: 0 auto;
+        }
+
+        .announcement-bar .slick-arrow svg{
+            fill: {{ section.settings.color_text }};
+            color: {{ section.settings.color_text }};
+        }
+    {% endif %}
+
+    .announcement-bar .announcement-bar__message{
+        display: none;
+    }
+
+    .announcement-bar .announcement-bar__message:first-child{
+        display: inline-block;
+    }
+
+    .announcement-bar .slick-slider .announcement-bar__message{
+        display: inline-block;
+    }
+
+    @media (max-width: 1400px){
+        {% if arrow == true %}
+            .announcement-bar .row{
+                max-width: 50%;
+            }
+        {% endif %}
+    }
+
+    @media (max-width: 1199px){
+        {% if arrow == true %}
+            .announcement-bar .row{
+                max-width: 90%;
+            }
+        {% endif %}
+    }
+
+    @media (max-width: 1024px){
+        .announcement-bar .announcement-countdown+.announcement-close{
+            top: 20%;
+        }
+
+        .announcement-bar__message .message.font-size-mb {
+            font-size: calc({{ section.settings.font_size_text | append: 'px' }} - 2px);
+        }
+    }
+
+    @media (max-width: 551px){
+        {% if section.settings.bg_image_announcement != blank %}
+        .announcement-bar{
+            background-position: inherit;
+        }
+        .announcement-bar .announcement-countdown+.announcement-close{
+            top: 18%;
+        }
+        {% endif %}
+
+        {% if arrow == true %}
+            .announcement-bar .row{
+                max-width: 100%;
+            }
+
+            .announcement-bar .slick-arrow{
+                display: none !important;
+            }
+        {% endif %}
+
+        .announcement-bar__message .message.font-size-mb {
+            font-size: calc({{ section.settings.font_size_text | append: 'px' }} - 4px);
+        }
+    }
+
+</style>
+
+{% schema %}
+{
+    "name": "t:sections.announcement-bar.name",
+    "max_blocks": 12,
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.announcement-bar.blocks.announcement.settings.text.title"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_close",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.text.enable_close",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "arrow_active",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.text.enable_arrows",
+            "default": false
+        },
+        {
+            "type": "image_picker",
+            "id": "bg_image_announcement",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.countdown.select_image"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.color_scheme.color_text",
+            "default": "#b05d5d"
+        },
+        {
+            "type": "color",
+            "id": "bg_color_text",
+            "label": "t:settings_schema.colors.settings.colors_name.background_color",
+            "default": "#ffe8e8"
+        },
+        {
+            "type": "color_background",
+            "id": "bg_color_text_gradient",
+            "label": "t:settings_schema.colors.settings.colors_name.background_color_gradient"
+        },
+        {
+            "type": "range",
+            "id": "font_size_text",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.text.font_size",
+            "min": 0,
+            "max": 50,
+            "step": 1,
+            "unit": "t:sections.layout.mg_desktop.unit",
+            "default": 12
+        },
+        {
+            "type": "header",
+            "content": "t:sections.announcement-bar.blocks.announcement.settings.countdown.title"
+        },
+        {
+            "type": "textarea",
+            "id": "top_message_text",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.countdown.label",
+            "default": "Limited-time Offer!"
+        },
+        {
+            "type" : "textarea",
+            "id" : "annou_countdown",
+            "label" : "t:sections.announcement-bar.blocks.announcement.settings.countdown.title",
+            "default" : "2021/01/7 0:0:00"
+        },
+        {
+            "type": "color",
+            "id": "color_countdown_text",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.color_scheme.color_text",
+            "default": "#06142e"
+        },
+        {
+            "type": "color",
+            "id": "border_color_countdown",
+            "label": "t:sections.announcement-bar.blocks.announcement.settings.countdown.border_color_text",
+            "default": "#f7f8fa"
+        },
+        {
+            "type": "color",
+            "id": "bg_color_countdown",
+            "label": "t:settings_schema.colors.settings.colors_name.background_color",
+            "default": "#f7f8fa"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "announcement",
+            "name": "t:sections.announcement-bar.blocks.announcement.name",
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "text",
+                    "label": "t:sections.announcement-bar.blocks.announcement.settings.text.label",
+                    "default": "<p>Welcome to our store</p>"
+                },
+                {
+                    "type": "url",
+                    "id": "message_link",
+                    "label": "t:sections.announcement-bar.blocks.announcement.settings.text.button"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Button"
+                },
+                {
+                    "type" : "color",
+                    "id" : "btn_color",
+                    "label" : "t:settings_schema.colors.settings.colors_name.color",
+                    "default" : "#f84248"
+                },
+                {
+                    "type" : "color",
+                    "id" : "btn_border_color",
+                    "label" : "t:settings_schema.colors.settings.colors_name.border_color",
+                    "default" : "#ffffff"
+                },
+                {
+                    "type" : "color",
+                    "id" : "btn_bg_color",
+                    "label" : "t:settings_schema.colors.settings.colors_name.background_color",
+                    "default" : "#ffffff"
+                },
+                {
+                    "type" : "color_background",
+                    "id" : "btn_bg_color_gradient",
+                    "label" : "t:settings_schema.colors.settings.colors_name.background_color_gradient"
+                }
+            ]
+        }
+    ],
+    "default": {
+        "blocks": [
+            {
+                "type": "announcement"
+            }
+        ]
+    }
+}
+{% endschema %}
+
+
