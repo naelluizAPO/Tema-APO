@@ -1,0 +1,300 @@
+{% liquid 
+    if settings.header_mobile_layout == '01'
+        assign mobile_header_layout = 'mobile-header-1'
+    elsif settings.header_mobile_layout == '02'
+        assign mobile_header_layout = 'mobile-header-2'
+    endif 
+%}
+<div class="header-mobile {{ mobile_header_layout }}">
+    <div class="container">
+        <div class="header-mobile--wrapper">
+            <div class="header-mobile--item header-mobile--left">
+                <div class="header-mobile--icon item__mobile--hamburger">
+                    <a class="mobileMenu-toggle" href="javascript:void(0)" data-mobile-menu aria-label="menu">
+                        <span class="mobileMenu-toggle__Icon"></span>
+                    </a>
+                </div>
+                {%- if settings.header_mobile_layout == '01' -%}
+                <div class="header-mobile--icon">
+                    {%- if section.settings.show_search -%}
+                        <details-modal class="header__iconItem header__search">
+                            <details>
+                                <summary class="header__icon header__icon--search header__icon--summary link link--text focus-inset modal__toggle" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}" data-search-mobile>
+                                    <span>
+                                        {% render 'icon-search', class: 'modal__toggle-open icon icon-search' %}
+                                        {% render 'icon-close', class: 'modal__toggle-close icon icon-close' %}
+                                    </span>
+                                </summary>
+                            </details>
+                        </details-modal>
+                    {%- endif -%}
+                </div>
+                {%- endif -%}
+                {%- if settings.header_mobile_layout == '02' -%}
+                    <div class="header-mobile--icon">
+                        {%- if menu_tab.size > 0 -%}
+                            {% assign page_handle = page.handle %}
+                                <div class="header__heading header__heading--item">
+                                {%- for block in menu_tab -%}
+                                    {%- liquid
+                                        assign multi_page_handle = pages[block.settings.link].handle
+                                        assign multi_page_url = pages[block.settings.link].url
+                                        assign class = 'header__heading-link focus-inset'
+    
+                                        if template.suffix contains 'landing'
+                                            if page_handle == multi_page_handle
+                                                assign class = 'header__heading-link focus-inset is-active'
+                                            endif
+                                        else
+                                            if forloop.first
+                                                assign class = 'header__heading-link focus-inset is-active'
+                                            endif
+                                        endif
+    
+                                        if multi_page_url != blank
+                                            assign url = multi_page_url
+                                        else
+                                            assign url = routes.root_url
+                                        endif
+                                    -%}
+    
+                                    <a href="{{ url }}" class="{{ class }} header__heading-logo">
+                                        {%- if block.settings.logo != blank -%}
+                                            {%- assign image = block.settings.logo -%}
+                                            {%- assign image_mb = block.settings.logo_mobile -%}
+                                            {%- assign image_size = section.settings.logo_width | append: 'x' -%}
+                                            {%- assign image_size_mb = section.settings.logo_width_mobile | append: 'x' -%}
+                                            <img {% if image_mb != blank %}class="logo-m-none"{% endif %} srcset="{{ image | img_url: image_size }} 1x, {{ image | img_url: image_size, scale: 2 }} 2x"
+                                                src="{{ image | img_url: image_size }}"
+                                                loading="lazy"
+                                                class="header__heading-logo"
+                                                alt="{{ image.alt | default: shop.name | escape }}">
+                                            {% if image_mb != blank %}
+                                            <img class="logo-d-none" srcset="{{ image_mb | img_url: image_size_mb }} 1x, {{ image_mb | img_url: image_size_mb, scale: 2 }} 2x"
+                                                    src="{{ image_mb | img_url: image_size_mb }}"
+                                                    loading="lazy"
+                                                    class="header__heading-logo"
+                                                    alt="{{ image.alt | default: shop.name | escape }}">
+                                            {% endif %}
+                                        {%- elsif block.settings.logo_text != blank -%}
+                                            <span class="h2 {{ section.settings.logo_text_transform }}">{{ block.settings.logo_text }}</span>
+                                        {%- else -%}
+                                            <span class="h2 {{ section.settings.logo_text_transform }}">{{ shop.name }}</span>
+                                        {%- endif -%}
+                                    </a>
+                                {%- endfor -%}
+                                </div>
+                        {% else %}
+                                <a href="{{ routes.root_url }}" class="header__heading-link focus-inset">
+                                    {%- if section.settings.logo_mobile != blank -%}
+                                        {%- assign image = section.settings.logo_mobile -%}
+                                        {%- assign image_size = section.settings.logo_width_mobile | append: 'x' -%}
+                                        <img srcset="{{ image | img_url: image_size }} 1x, {{ image | img_url: image_size, scale: 2 }} 2x" src="{{ image | img_url: image_size }}" loading="lazy" class="header__heading-logo" alt="{{ image.alt | default: shop.name | escape }}">
+                                    {%- elsif section.settings.logo != blank -%}
+                                        {%- assign image = section.settings.logo -%}
+                                        {%- assign image_size = section.settings.logo_width_mobile | append: 'x' -%}
+                                        <img srcset="{{ image | img_url: image_size }} 1x, {{ image | img_url: image_size, scale: 2 }} 2x" src="{{ image | img_url: image_size }}" loading="lazy" class="header__heading-logo" alt="{{ image.alt | default: shop.name | escape }}">
+                                    {%- elsif section.settings.logo_text != blank -%}
+                                        <span class="h2 {{ section.settings.logo_text_transform }}">{{ section.settings.logo_text }}</span>
+                                    {%- else -%}
+                                        <span class="h2 {{ section.settings.logo_text_transform }}">{{ shop.name }}</span>
+                                    {%- endif -%}
+                                </a>
+                        {% endif %}
+                    </div>
+                {%- endif -%}
+            </div>
+
+            {%- if settings.header_mobile_layout == '01' -%}
+            <div class="header-mobile--item header-mobile--center">
+
+                <div class="header-mobile--icon">
+                    {%- if menu_tab.size > 0 -%}
+                        {% assign page_handle = page.handle %}
+                            <div class="header__heading header__heading--item">
+                            {%- for block in menu_tab -%}
+                                {%- liquid
+                                    assign multi_page_handle = pages[block.settings.link].handle
+                                    assign multi_page_url = pages[block.settings.link].url
+                                    assign class = 'header__heading-link focus-inset'
+
+                                    if template.suffix contains 'landing'
+                                        if page_handle == multi_page_handle
+                                            assign class = 'header__heading-link focus-inset is-active'
+                                        endif
+                                    else
+                                        if forloop.first
+                                            assign class = 'header__heading-link focus-inset is-active'
+                                        endif
+                                    endif
+
+                                    if multi_page_url != blank
+                                        assign url = multi_page_url
+                                    else
+                                        assign url = routes.root_url
+                                    endif
+                                -%}
+
+                                <a href="{{ url }}" class="{{ class }} header__heading-logo">
+                                    {%- if block.settings.logo != blank -%}
+                                        {%- assign image = block.settings.logo -%}
+                                        {%- assign image_mb = block.settings.logo_mobile -%}
+                                        {%- assign image_size = section.settings.logo_width | append: 'x' -%}
+                                        {%- assign image_size_mb = section.settings.logo_width_mobile | append: 'x' -%}
+                                        <img {% if image_mb != blank %}class="logo-m-none"{% endif %} srcset="{{ image | img_url: image_size }} 1x, {{ image | img_url: image_size, scale: 2 }} 2x"
+                                                src="{{ image | img_url: image_size }}"
+                                                loading="lazy"
+                                                class="header__heading-logo"
+                                                alt="{{ image.alt | default: shop.name | escape }}">
+                                        {% if image_mb != blank %}
+                                        <img class="logo-d-none" srcset="{{ image_mb | img_url: image_size_mb }} 1x, {{ image_mb | img_url: image_size_mb, scale: 2 }} 2x"
+                                                src="{{ image_mb | img_url: image_size_mb }}"
+                                                loading="lazy"
+                                                class="header__heading-logo"
+                                                alt="{{ image.alt | default: shop.name | escape }}">
+                                        {% endif %}
+                                    {%- elsif block.settings.logo_text != blank -%}
+                                        <span class="h2 {{ section.settings.logo_text_transform }}">{{ block.settings.logo_text }}</span>
+                                    {%- else -%}
+                                        <span class="h2 {{ section.settings.logo_text_transform }}">{{ shop.name }}</span>
+                                    {%- endif -%}
+                                </a>
+                            {%- endfor -%}
+                            </div>
+                    {% else %}
+                            <a href="{{ routes.root_url }}" class="header__heading-link focus-inset">
+                                {%- if section.settings.logo_mobile != blank -%}
+                                    {%- assign image = section.settings.logo_mobile -%}
+                                    {%- assign image_size = section.settings.logo_width_mobile | append: 'x' -%}
+                                    <img srcset="{{ image | img_url: image_size }} 1x, {{ image | img_url: image_size, scale: 2 }} 2x" src="{{ image | img_url: image_size }}" loading="lazy" class="header__heading-logo" alt="{{ image.alt | default: shop.name | escape }}" style="--width-logo-mb: {{ section.settings.logo_width_mobile | append: 'px'}};">
+                                {%- elsif section.settings.logo != blank -%}
+                                    {%- assign image = section.settings.logo -%}
+                                    {%- assign image_size = section.settings.logo_width_mobile | append: 'x' -%}
+                                    <img srcset="{{ image | img_url: image_size }} 1x, {{ image | img_url: image_size, scale: 2 }} 2x" src="{{ image | img_url: image_size }}" loading="lazy" class="header__heading-logo" alt="{{ image.alt | default: shop.name | escape }}" style="--width-logo-mb: {{ section.settings.logo_width_mobile | append: 'px'}};">
+                                {%- elsif section.settings.logo_text != blank -%}
+                                    <span class="h2 {{ section.settings.logo_text_transform }}">{{ section.settings.logo_text }}</span>
+                                {%- else -%}
+                                    <span class="h2 {{ section.settings.logo_text_transform }}">{{ shop.name }}</span>
+                                {%- endif -%}
+                            </a>
+                    {% endif %}
+                </div>
+            </div>
+            {%- endif -%}
+            <div class="header-mobile--item header-mobile--right">
+                {%- if settings.header_mobile_layout == '02' -%}
+                    <div class="header-mobile--icon">
+                        {%- if section.settings.show_search -%}
+                            <details-modal class="header__iconItem header__search">
+                                <details>
+                                    <summary class="header__icon header__icon--search header__icon--summary link link--text focus-inset modal__toggle" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}" data-search-mobile>
+                                        <span>
+                                            {% render 'icon-search', class: 'modal__toggle-open icon icon-search' %}
+                                            {% render 'icon-close', class: 'modal__toggle-close icon icon-close' %}
+                                        </span>
+                                    </summary>
+                                </details>
+                            </details-modal>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                <div class="header-mobile--icon">
+                    {%- if shop.customer_accounts_enabled and section.settings.show_customer -%}
+                    <a class="header__icon header__icon--account link link--text focus-inset" data-open-auth-sidebar>
+                        {% if settings.header_layout == '02' %}
+                            {% render 'icon-account-2' %}
+                        {% else %}
+                            {% render 'icon-account' %}
+                        {% endif %}
+                        <span class="visually-hidden">
+                            {%- liquid
+                            if customer
+                            echo 'customer.account_fallback' | t
+                            else
+                            echo 'customer.log_in' | t
+                            endif
+                            -%}
+                        </span>
+                    </a>
+                    {%- endif -%}
+                </div>
+              <div class="header-mobile--icon"> 
+                <a href="/pages/rastrearpedido" class="header__icon header__icon--cart link link--text focus-inset" id="cart-icon-bubble">
+                                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M1023 4945 c-520 -94 -891 -561 -860 -1081 12 -188 87 -418 208 -637
+149 -268 442 -642 707 -899 120 -118 124 -118 244 0 348 339 663 772 807 1108
+196 457 121 904 -205 1227 -233 231 -581 340 -901 282z m338 -161 c360 -68
+641 -352 704 -709 38 -217 -2 -413 -140 -692 -134 -270 -401 -628 -654 -878
+l-71 -69 -66 64 c-345 341 -662 811 -762 1130 -77 243 -64 465 37 674 173 356
+565 554 952 480z"/>
+<path d="M1085 4468 c-154 -29 -314 -154 -385 -302 -221 -458 225 -945 702
+-766 150 56 281 197 331 355 31 99 30 244 -1 337 -50 144 -154 264 -287 328
+-118 57 -233 72 -360 48z m258 -174 c100 -38 195 -134 233 -237 14 -37 19 -78
+19 -143 0 -84 -3 -95 -37 -166 -45 -91 -103 -147 -196 -191 -61 -29 -76 -32
+-162 -32 -86 0 -101 3 -162 32 -209 99 -293 331 -196 540 27 58 118 152 173
+178 102 48 230 56 328 19z"/>
+<path d="M2426 3659 c-20 -16 -26 -29 -26 -59 0 -30 6 -43 26 -59 26 -21 37
+-21 456 -21 l429 0 24 -25 25 -24 0 -1071 0 -1071 25 -24 c32 -33 78 -33 110
+0 l25 24 0 776 0 775 488 0 c417 0 491 -2 509 -15 25 -18 38 -55 178 -524
+l105 -353 0 -434 0 -434 -163 0 -163 0 -54 41 c-206 156 -474 156 -680 0 l-54
+-41 -737 0 c-730 0 -737 0 -763 -21 -37 -29 -37 -89 0 -118 26 -21 34 -21 705
+-21 374 0 679 -2 679 -3 0 -2 -10 -30 -22 -63 -31 -88 -32 -254 0 -346 94
+-271 375 -434 645 -374 105 24 188 68 266 141 79 75 134 164 158 257 l17 68
+139 0 c133 0 139 1 162 25 l25 24 0 661 0 661 -131 437 c-71 240 -141 456
+-155 479 -28 48 -73 85 -123 102 -24 8 -186 11 -532 11 l-499 0 0 216 c0 141
+-4 231 -12 258 -16 55 -99 138 -154 154 -30 9 -163 12 -471 12 -420 0 -431 0
+-457 -21z m1818 -2577 c91 -42 149 -100 194 -190 35 -72 37 -81 37 -172 0 -91
+-2 -100 -37 -172 -45 -91 -103 -147 -196 -191 -61 -29 -76 -32 -162 -32 -86 0
+-101 3 -162 32 -93 44 -151 100 -196 191 -35 72 -37 81 -37 171 0 87 3 102 32
+163 40 85 97 147 172 186 78 42 122 52 213 48 61 -3 92 -11 142 -34z m556
+-202 l0 -80 -83 0 -83 0 -18 68 c-10 37 -20 73 -23 80 -3 9 21 12 101 12 l106
+0 0 -80z"/>
+<path d="M3705 2695 l-25 -24 0 -271 0 -271 25 -24 c23 -24 30 -25 141 -25
+l118 0 82 -80 82 -80 220 0 c215 0 222 1 247 23 17 14 26 33 27 52 0 17 -43
+176 -97 355 -77 258 -102 330 -122 348 -24 22 -26 22 -349 22 l-325 0 -24 -25z
+m661 -373 l70 -237 -119 -3 -120 -3 -82 81 -83 80 -96 0 -96 0 0 160 0 160
+228 0 227 0 71 -238z"/>
+<path d="M505 2615 l-25 -24 0 -951 0 -951 25 -24 24 -25 218 0 219 0 17 -68
+c24 -93 79 -182 157 -256 80 -74 144 -110 246 -136 98 -25 170 -25 268 0 102
+26 166 62 246 136 78 74 133 163 157 256 l17 68 619 0 618 0 24 25 c33 32 33
+78 0 110 l-24 25 -618 0 -619 0 -17 68 c-10 38 -35 97 -55 132 -173 293 -550
+367 -822 161 l-54 -41 -243 0 -243 0 0 735 0 736 -25 24 c-15 16 -36 25 -55
+25 -19 0 -40 -9 -55 -25z m1179 -1533 c91 -42 149 -100 194 -190 35 -72 37
+-81 37 -172 0 -91 -2 -100 -37 -172 -45 -91 -103 -147 -196 -191 -61 -29 -76
+-32 -162 -32 -86 0 -101 3 -162 32 -93 44 -151 100 -196 191 -35 72 -37 81
+-37 171 0 87 3 102 32 163 40 85 97 147 172 186 78 42 122 52 213 48 61 -3 92
+-11 142 -34z m-674 -125 c0 -2 -9 -30 -20 -62 -11 -32 -20 -66 -20 -77 0 -17
+-11 -18 -165 -18 l-165 0 0 80 0 80 185 0 c102 0 185 -2 185 -3z"/>
+</g>
+</svg>
+                                    </a>
+              </div>
+
+                <div class="header-mobile--icon">
+                    {%- if section.settings.show_cart -%}
+                    <a {% if settings.show_quick_cart %}data-cart-sidebar href="javascript:void(0)"{% else %}href="{{ routes.cart_url }}" {% endif %} class="header__icon header__icon--cart link link--text focus-inset" id="cart-icon-bubble">
+                        {% if settings.header_layout == '02' or settings.header_layout == '03' or settings.header_layout == '05' %}
+                            {% render 'icon-cart-2' %}
+                        {% elsif settings.header_layout == '07' or settings.header_layout == '06' %}
+                            {% render 'icon-cart' %}
+                        {% elsif settings.header_layout == '08' or settings.header_layout == '04' %}
+                            {% render 'icon-cart-3' %}
+                        {% else %}
+                            {% render 'icon-cart-2' %}
+                        {% endif %}
+                        <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+                        <div class="cart-count-bubble">
+                            {%- if cart.item_count < 100 -%} <span class="text" aria-hidden="true" data-cart-count>{{ cart.item_count }}</span>
+                                {%- endif -%}
+                                <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+                        </div>
+                    </a>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
