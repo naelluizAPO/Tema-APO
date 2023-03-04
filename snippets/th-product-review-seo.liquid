@@ -1,0 +1,30 @@
+{%- assign product_schema = product.metafields.product_schema -%}
+{%- if product_schema['th_ratingCount'] > 0 -%}
+  <script id="rivyoSchemaJson" type="application/ld+json">
+    {
+	  "@context": "http://schema.org",
+	  "@type": "Product",
+	  "@id": {{ canonical_url | json }},
+	  "aggregateRating": {
+		"@type": "AggregateRating",
+		"ratingValue": "{{ product_schema['th_ratingValue'] }}",
+		"reviewCount": "{{ product_schema['th_ratingCount'] }}",
+		"worstRating": "1",
+		"bestRating": "5"
+	  },
+	  "name": "{{ product.title }}",
+	  "review": {
+		"@type": "Review",
+		"reviewRating": {
+		  "@type": "Rating",
+		  "ratingValue": "5",
+		  "bestRating": "5"
+		},
+		"author": {
+		  "@type": "Organization",
+		  "name": "{{shop.name}}"
+		}
+	  }
+    }
+  </script>
+{%- endif -%}

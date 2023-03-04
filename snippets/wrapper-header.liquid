@@ -1,0 +1,45 @@
+{% if settings.header_layout == '01' %}
+	{% section 'announcement-bar' %}
+	{% section 'header' %}
+{% elsif settings.header_layout == '02' %}
+	{% section 'announcement-bar' %}
+	{% section 'header-02' %}
+{% elsif settings.header_layout == '03' %}
+	{% section 'header-03' %}
+	{% section 'announcement-bar' %}
+{% elsif settings.header_layout == '04' %}
+	{% unless settings.enable_announcement_bottom %}
+		{% section 'announcement-bar' %}
+	{% endunless %}
+	{% section 'header-04' %}
+	{% if settings.enable_announcement_bottom %}
+		{% section 'announcement-bar' %}
+	{% endif %}
+{% elsif settings.header_layout == '05' %}
+	{% section 'announcement-bar' %}
+	{% section 'header-05' %}
+{% elsif settings.header_layout == '06' %}
+	{% section 'header-06' %}
+	{% if settings.enable_announcement_bottom %}
+		{% section 'announcement-bar' %}
+	{% endif %}
+{% elsif settings.header_layout == '07' %}
+	{% section 'header-07' %}
+{% elsif settings.header_layout == '08' %}
+	{% section 'announcement-bar' %}
+	{% section 'header-08' %}
+{% endif %}
+
+{%- if settings.mobile_menu != 'default' -%}
+	{% section 'halo-navigation-mobile' %}
+	{% section 'halo-navigation-mobile-2' %}
+	{% section 'halo-navigation-mobile-3' %}
+{%- endif -%}
+
+{% unless settings.enable_currencies %}
+    <script src='//cdn.shopify.com/s/javascripts/currencies.js' defer="defer"></script>
+    <script src="{{ 'jquery.currencies.min.js' | asset_url }}" defer="defer"></script>
+    <script type="text/javascript">
+        let shopCurrency="{{ shop.currency }}"
+    </script>
+{% endunless %}

@@ -1,0 +1,51 @@
+{% if settings.product_card_layout == '02' %}
+    {% render 'product-card-02',
+        product_card_product: product_card_product,
+        portrait_aspect_ratio: portrait_aspect_ratio,
+        serial: serial,
+        sectionId: sectionId,
+        media_size: media_size,
+        hasCountdown: hasCountdown,
+        loading: loading
+    %}
+{% elsif settings.product_card_layout == '03' %}
+    {% render 'product-card-03',
+        product_card_product: product_card_product,
+        portrait_aspect_ratio: portrait_aspect_ratio,
+        serial: serial,
+        sectionId: sectionId,
+        media_size: media_size,
+        hasCountdown: hasCountdown,
+        loading: loading
+    %}
+{% elsif settings.product_card_layout == '04' %}
+    {% render 'product-card-04',
+        product_card_product: product_card_product,
+        portrait_aspect_ratio: portrait_aspect_ratio,
+        serial: serial,
+        sectionId: sectionId,
+        media_size: media_size,
+        hasCountdown: hasCountdown,
+        loading: loading
+    %}
+{% elsif settings.product_card_layout == '05' %}
+    {% render 'product-card-05',
+        product_card_product: product_card_product,
+        portrait_aspect_ratio: portrait_aspect_ratio,
+        serial: serial,
+        sectionId: sectionId,
+        media_size: media_size,
+        hasCountdown: hasCountdown,
+        loading: loading
+    %}
+{% else %}
+    {% render 'product-card',
+        product_card_product: product_card_product,
+        portrait_aspect_ratio: portrait_aspect_ratio,
+        serial: serial,
+        sectionId: sectionId,
+        media_size: media_size,
+        hasCountdown: hasCountdown,
+        loading: loading
+    %}
+{% endif %}

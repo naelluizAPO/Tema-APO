@@ -1,0 +1,11 @@
+{%- if settings.enable_footer_brand -%}
+	{% section 'brand-slider' %}
+{%- endif -%}
+{% if settings.enable_footer_policies %}
+	{% section 'policies-block' %}
+{% endif %}
+{% if settings.footer_layout == '01' %}
+	{% section 'footer' %}
+{% elsif settings.footer_layout == '02' %}
+	{% section 'footer-02' %}
+{% endif %}

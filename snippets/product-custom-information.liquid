@@ -1,0 +1,42 @@
+{%- liquid 
+    assign icon = block.settings.icon
+    assign text = block.settings.text
+    assign text_description = block.settings.text_description
+    assign color_title = block.settings.color_title
+    assign color_des = block.settings.color_des
+    assign fontsize_text = block.settings.fontsize_text
+    assign content_popup = block.settings.content_popup
+-%}
+<div class="product-customInformation text-left" data-custom-information>
+    {%- if icon != blank -%}
+        <div class="product-customInformation__icon">
+            {{ icon }}
+        </div>
+    {%- endif -%}
+    {%- if text != blank or text_icon != blank -%}
+        <div class="product-customInformation__content">
+            {%- if text != blank -%}
+                <div class="product__text title" {{ block.shopify_attributes }} 
+                    style="--fontsize-text:{{ fontsize_text | append: 'px' }};
+                    --color-title: {{ color_title }}"
+                >
+                    <h5 class="title">{{ text }}</h5>
+                    {% render 'icon-info-note' %}
+                </div>
+            {%- endif -%}
+            {%- if text_description != blank -%}
+                <div class="product__text des" {{ block.shopify_attributes }} 
+                    style="--fontsize-text:{{ fontsize_text | append: 'px' }};
+                    --color-des: {{ color_des }}"
+                >
+                    {{ text_description }}
+                </div>
+            {%- endif -%}
+        </div>
+    {%- endif -%}
+    {%- if content_popup != blank -%}
+        <div class="product-customInformation__popup hidden">
+            {{ content_popup }}
+        </div>
+    {%- endif -%}
+</div>
