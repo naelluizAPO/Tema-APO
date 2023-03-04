@@ -1,0 +1,185 @@
+<div class="changing on collection collection-info collection-info--{{ position }} align-{{ collection_description_align_tb }}">
+	{%- if show_breadcrumb -%}
+		<div class="collection-breadcrumb text-{{ breadcrumb_alignment }}"
+			style="
+				--breadcrumb-bg: {% if breadcrumb_gradient != blank and breadcrumb_gradient != 'rgba(0,0,0,0)' %}{{ breadcrumb_gradient }}{% elsif breadcrumb_bg != blank and breadcrumb_bg != 'rgba(0,0,0,0)' %}{{ breadcrumb_bg }}{% endif %};
+				--breadcrumb-bg-mb: {% if breadcrumb_gradient_mb != blank and breadcrumb_gradient_mb != 'rgba(0,0,0,0)' %}{{ breadcrumb_gradient_mb }}{% elsif breadcrumb_bg_mb != blank and breadcrumb_bg_mb != 'rgba(0,0,0,0)' %}{{ breadcrumb_bg_mb }}{% endif %};
+			"
+		>
+        	{% render 'breadcrumb' %}
+		</div>
+    {%- endif -%}
+	{%- if show_page_title -%}
+        <h1 class="collection-title page-header text-{{ page_title_alignment }}">
+            {{ collection.title | escape }}
+        </h1>
+    {%- endif -%} 
+	<div class="collection-info-item">
+		<div class="collection-description halo-text-format text-{{ collection_description_align }}" style="{% if collection_description_align == 'left' or collection_description_align == 'right' %}margin: 0;{% endif %}">
+			{%- if show_read_more_read_less -%}
+				<div class="short-description">
+					{%- liquid
+                        assign desc = collection.description | strip_html
+                        assign word_number = 50
+                    -%}
+					{{ desc | truncatewords: word_number }}
+				</div>
+				<div class="full-description">
+					{{ collection.description }}
+				</div>
+				<a href="#" class="link link-underline read-description more">
+					<span class="text">{{ 'sections.collection_template.read_more' | t }}</span>
+				</a>
+			{%- else -%}
+				{{ collection.description }}
+			{%- endif -%}
+		</div>
+	</div>
+	
+	{%- if show_sub_collection -%}
+		{%- if sub_collection_position == 'absolute' -%}
+			{%- if linklists[collection.handle] != blank -%}
+				<div class="collection-info-item">
+					<ul class="collection-sub-list list-unstyled text-{{ collection_description_align }}">
+						{%- liquid
+							if sub_collection_type == 'some'
+								assign limit = 5
+							else
+								assign limit = 10000
+							endif
+						-%}
+						{%- for link in linklists[collection.handle].links limit: limit -%}
+	                        <li class="item" {% if forloop.first %}data-first{% endif %}{% if forloop.last %}data-last{% endif %}>
+	                            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+	                        </li>
+	                    {%- endfor -%}
+					</ul>
+				</div>
+			{%- endif -%}
+		{%- endif -%}
+	{%- endif -%}
+</div>
+
+{%- if show_sub_collection -%}
+	{%- if sub_collection_position == 'relative' -%}
+		{%- if linklists[collection.handle] != blank -%}
+			<div class="collection-info-item" data-collection-links>
+				<ul class="collection-sub-list list-unstyled text-{{ collection_description_align }}">
+					{%- liquid
+						if sub_collection_type == 'some'
+							assign limit = 5
+						else
+							assign limit = 10000
+						endif
+					-%}
+					<li class="item title">
+                        <span>{{ sub_collection_title}}</span>
+                    </li>
+					{%- for link in linklists[collection.handle].links limit: limit -%}
+                        <li class="item">
+                            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                        </li>
+                    {%- endfor -%}
+				</ul>
+			</div>
+		{%- endif -%}
+	{%- endif -%}
+{%- endif -%}
+
+<style type="text/css" media="screen">
+	#HeaderCollectionSection-{{ section.id }} .collection-sub-list {
+		padding-top: {{ all_sub_collection_padding_top }};
+		padding-bottom: {{ all_sub_collection_padding_bottom }};
+		{% if colors_bg_gradient != blank %}
+            background: {{ colors_bg_gradient }};
+        {% else %}
+            background-color: {{ colors_bg }};
+        {% endif %}
+	}
+
+	#HeaderCollectionSection-{{ section.id }} .collection-sub-list .item {
+	    margin-bottom: {{ sub_collection_grid_gap }};
+	    margin-right: {{ sub_collection_grid_gap }};
+	}
+	
+	#HeaderCollectionSection-{{ section.id }} .collection-sub-list .item span {
+	    font-size: {{ fontsize_sub_collection }};
+	    font-weight: {{ fontweight_sub_collection }};
+	    text-transform: {{ sub_collection_text_transform }};
+	    color: {{ sub_collection_title_color }};
+	    padding-top: {{ sub_collection_padding_top }};
+		padding-bottom: {{ sub_collection_padding_bottom }};
+		display: block;
+		background-image: linear-gradient(transparent 97%, {{ sub_collection_title_color}} 3%);
+	    background-repeat: repeat-x;
+	    background-position-y: -14px;
+	}
+
+	#HeaderCollectionSection-{{ section.id }} .collection-sub-list .item a {
+	    font-size: {{ fontsize_sub_collection }};
+	    font-weight: {{ fontweight_sub_collection }};
+	    text-transform: {{ sub_collection_text_transform }};
+	    color: {{ color_sub_collection }};
+	    padding-top: {{ sub_collection_padding_top }};
+		padding-bottom: {{ sub_collection_padding_bottom }};
+	    {% if sub_collection_background_gradient != blank %}
+            background: {{ sub_collection_background_gradient }};
+        {% else %}
+            background-color: {{ sub_collection_background }};
+        {% endif %}
+	    border: 1px solid {{ sub_collection_border }};
+	}
+
+	@media (min-width: 1025px) {
+		#HeaderCollectionSection-{{ section.id }} .collection-sub-list .item a:hover {
+	    	{% if sub_collection_background_gradient_hover != blank %}
+	            background: {{ sub_collection_background_gradient_hover }} !important;
+	        {% else %}
+	            background: {{ sub_collection_background_hover }} !important;
+	        {% endif %}
+	        border-color: {{ sub_collection_border_hover }} !important;
+	        color: {{ sub_collection_color_hover }} !important;
+	  	}
+
+	  	{% if sub_collection_background == blank or sub_collection_background == 'rgba(0,0,0,0)' %}
+	  		#HeaderCollectionSection-{{ section.id }} .collection-sub-list .item a:hover {
+	  			text-decoration: underline;
+    			text-underline-offset: 0.1em;
+	  		}
+	  	{% endif %}
+	}
+</style>
+
+<script type="text/javascript">
+	window.addEventListener('load', () => {
+		const collectionLinksElement = document.querySelector('[data-collection-links]')
+		const collectionLinksList = [...collectionLinksElement.querySelectorAll('ul li.item')]
+		const firstLink = collectionLinksList[0]
+		const lastLink = collectionLinksList.pop()
+
+		collectionLinksElement.classList.add('initialized')
+
+		const scrollToLastObserver = new IntersectionObserver((entries) => {
+			if (entries[0].isIntersecting) {
+				collectionLinksElement.classList.add('disable-last')
+			} else {
+				collectionLinksElement.classList.remove('disable-last')
+			}
+		}, {
+			threshold: 0.6
+		})
+		
+		const scrollToFirstObserver = new IntersectionObserver((entries) => {
+			if (entries[0].isIntersecting) {
+				collectionLinksElement.classList.add('disable-first')
+			} else {
+				collectionLinksElement.classList.remove('disable-first')
+			}
+		}, {
+			threshold: 0.6
+		})
+
+		scrollToLastObserver.observe(lastLink)
+		scrollToFirstObserver.observe(firstLink)
+	})
+</script>

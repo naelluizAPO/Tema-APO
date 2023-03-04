@@ -1,0 +1,13 @@
+<link rel="stylesheet" href="{{ 'component-warning-popup.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-warning-popup.css' | asset_url | stylesheet_tag }}</noscript>
+
+<div class="halo-popup halo-warning-popup bottom-up" data-warning-popup id="halo-warning-popup">
+    <a href="javascript:void(0)" title="{{ 'general.common.close' | t }}" class="halo-popup-close clearfix" data-close-warning-popup>
+        {% render 'icon-close' %}
+    </a>
+    <span class="halo-warning-icon">
+        {% render 'icon-warning' %}
+    </span>
+    <div class="halo-popup-content custom-scrollbar halo-warning-content" data-halo-warning-content>this is just a warning</div>
+</div>
+

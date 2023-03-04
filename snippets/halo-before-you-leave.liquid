@@ -1,0 +1,87 @@
+{%- liquid
+	assign position = settings.before_you_leave_position
+	assign time = settings.before_you_leave_time
+	assign logo = settings.before_you_leave_logo
+	assign background = settings.before_you_leave_bg
+	assign content = settings.before_you_leave_content
+	assign collection = settings.before_you_leave_collection
+	assign limit = settings.before_you_leave_collection_limit
+	assign show_btn = settings.show_before_you_leave_btn
+	assign btn = settings.before_you_leave_btn
+	assign btn_link = settings.before_you_leave_btn_link
+-%}
+
+<link rel="stylesheet" href="{{ 'component-before-you-leave.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-before-you-leave.css' | asset_url | stylesheet_tag }}</noscript>
+
+<div class="halo-sidebar halo-sidebar-{{ position }} halo-leave-sidebar" id="halo-leave-sidebar" data-time="{{ time | times: 60000 }}">
+    <a href="#" class="halo-sidebar-close" data-close-before-you-leave alt="{{ 'general.common.close' | t }}">
+        {% render 'icon-close' %}
+        {{ 'general.common.close' | t }}
+    </a>
+    <div class="halo-sidebar-wrapper custom-scrollbar">
+    	{%- if logo != blank -%}
+			<div class="before-you-leave-header">
+				<img srcset="{{ logo | img_url: '80x' }} 1x, {{ logo | img_url: '80x', scale: 2 }} 2x"
+	                src="{{ logo | img_url: '80x' }}"
+	                loading="lazy"
+	                alt="{{ logo.alt | default: shop.name | escape }}">
+			</div>
+		{%- endif -%}
+		<div class="before-you-leave-banner">
+			<div class="image{% unless background != blank %} no-image{% endunless %}">
+				{%- if background != blank -%}
+					<img srcset="{{ background | img_url: '470x' }} 1x, {{ background | img_url: '470x', scale: 2 }} 2x"
+		                src="{{ background | img_url: '470x' }}"
+		                loading="lazy"
+		                alt="{{ background.alt | default: shop.name | escape }}">
+				{%- endif -%}
+			</div>
+			{%- if content != blank -%}
+				<div class="content">
+					{{ content }}
+				</div>
+			{%- endif -%}
+		</div>
+		{%- if collection != blank -%}
+			{%- liquid
+				assign collection = collections[collection]
+				assign count = collection.products_count
+			-%}
+			{%- if count > limit -%}
+				{% assign count = limit %}
+			{%- endif -%}
+		    <div class="before-you-leave-content">
+		        <div class="before-you-leave-content-title">
+		            <div class="title">
+		                <span class="text">
+		                	{{ 'before_you_leave.general.recommended_product' | t }}
+		                </span>
+		                <span class="count">{{ count }}</span>
+		            </div>
+		        </div>
+		        <div class="before-you-leave-content-product">
+		            <div class="products-carousel">
+		                {% for product in collection.products limit: limit %}
+		                    <div class="product">
+		                        {% render 'product-card-sidebar',
+									product_card_product: product
+								%}
+		                    </div>
+		                {% else %}
+		                	
+		                {% endfor %}
+		            </div>
+		        </div>
+		    </div>
+		{%- endif -%}
+		{%- if show_btn -%}
+			<div class="before-you-leave-back">
+				<a class="button button-{{ btn }}" href="{{ btn_link }}">
+					<span class="text">{{ 'before_you_leave.general.continue_shopping' | t }}</span>
+				</a>
+			</div>
+		{%- endif -%}
+    </div>
+</div>

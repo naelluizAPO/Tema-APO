@@ -1,0 +1,24 @@
+<div class="halo-lookbook-popup-mobile" data-lookbook-popup-mobile>
+    <!-- <div class="overlay"></div> -->
+    <div class="halo-popup-wrapper-mobile" data-lookbook-popup-mobile-wrapper>
+        <h1 class="mobile-popup-header">
+            <span>{{ 'lookbook.shop_look' | t }}</span>
+            <a href="javascript:void(0)" data-close-lookbook-modal class="close close-modal">
+                {% render 'icon-close' %}
+            </a>
+        </h1>
+        <div class='items-scroll scroll-snap-mobile disable-srollbar'>
+            <div 
+                class="halo-popup-container-mobile"
+                data-lookbook-mobile-images-container
+            >
+            </div>
+        </div>
+    </div>    
+</div>
+
+<script>
+    window.currencySymbol ="{{ cart.currency.symbol }}"
+</script> 
+
+{% comment %} // scroll-snap-mobile disable-srollbar {% endcomment %}

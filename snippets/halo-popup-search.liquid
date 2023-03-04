@@ -1,0 +1,43 @@
+<div class="halo-popup halo-search-popup" data-search-popup id="halo-search-popup">
+    <div class="halo-popup-wrapper">
+    	<div class="halo-popup-header customPopup-header">
+            <div class="container">
+    		    <a href="#" class="halo-sidebar-popup" data-search-close-popup alt="{{ 'general.common.close' | t }}">
+                    {% render 'icon-close' %}
+                </a>
+            </div>
+    	</div>
+	    <div class="halo-popup-content custom-scrollbar">
+	        {% if settings.header_layout == '02' %}
+                <details class="search_details">
+                    <summary class="header__search-full" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}">
+                        <div class="container">
+                            <a href="javascript:void(0)" class="header-search-close" alt="{{ 'general.common.close' | t }}">
+                                {% render 'icon-close' %}
+                                {{ 'general.common.close' | t }}
+                            </a>
+                            <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+                                <div class="field">
+                                    <input class="search__input field__input form-input-placeholder" id="Search-In-Modal" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.search_product' | t }}" autocomplete="off">
+                                    <input type="hidden" name="options[prefix]" value="last">
+                                    <label class="field__label hiddenLabels" for="Search-In-Modal">
+                                        {{ 'general.search.search' | t }}
+                                    </label>
+                                    <button class="button search__button field__button focus-inset" aria-label="{{ 'general.search.search' | t }}">
+                                        {% render 'icon-search' %}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </summary>
+
+                    <div class="search-modal modal__content{% if settings.show_quick_search %} quickSearch{% endif %}" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
+                        {%- if settings.show_quick_search -%}
+                            {% render 'halo-quick-search' %}
+                        {%- endif -%}
+                    </div>
+                </details>
+            {% endif %}
+	    </div>
+    </div>
+</div>
