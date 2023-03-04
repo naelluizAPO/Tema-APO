@@ -1,0 +1,57 @@
+{%- if settings.show_someone_purchase -%}
+<link rel="stylesheet" href="{{ 'component-someone-purchase.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-someone-purchase.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- assign time = time | default: settings.someone_purchase_time | times: 1000 -%}
+<notification-popup class="halo-popup halo-notification-popup halo-popup-{{ settings.someone_purchase_position }}{% if settings.show_someone_purchase_mobile %} show_someone_purchase_mobile{% endif %}" data-notification-popup data-notification-time="{{ time }}" id="halo-notification-popup">
+	<a href="javascript:void(0)" class="halo-popup-close customPopup-close clearfix" data-close-notification-popup title="{{ 'general.common.close' | t }}">
+        {% render 'icon-close' %}
+    </a>
+    <div class="halo-popup-content">
+        <div class="product-suggest clearfix">
+            <a class="product-image" href="#"></a>
+            <div class="product-info">
+                <div class="text">
+                    <span class="word">
+                        {{ 'someone_purcharse.general.text_1' | t }}
+                    </span>
+                </div>
+                <div class="info">
+                    <a href="#" class="product-name link-underline"></a>
+                </div>
+                <span class="time" data-time-text>
+                    {{ 'someone_purcharse.general.text_2' | t }}
+                </span>
+            </div>
+        </div>
+        <div class="product-data hide">
+            {% for i in (1..10) %}
+                {% capture cap_product %}someone_purchase_product_{{ i }}{% endcapture %}
+                {% capture cap_from_ago %}someone_purchase_from_ago_{{ i }}{% endcapture %}
+                {% capture cap_time_ago %}someone_purchase_time_ago_{{ i }}{% endcapture %}
+
+                {% assign product_id = settings[cap_product] %}
+                {% assign product = all_products[product_id] %}
+                {% assign from_ago = settings[cap_from_ago] %}
+                {% assign time_ago = settings[cap_time_ago] %}
+
+                {% if product != blank %}
+                    <div class="data-product"
+                        data-id="someone_recently_{{ i }}"
+                        data-image="{{ product.featured_image.src | img_url: '150x' }}"
+                        data-url="{{ product.url | within: collection }}"
+                        data-title="{{ product.title | truncatewords: 4}}"
+                        data-alt="{{ product.title }}"
+                        data-local="{{ from_ago }}"
+                        data-time="{{ time_ago }}"
+                    >
+                    </div>
+                {% endif %}         
+            {% endfor %}
+        </div>
+    </div>
+</notification-popup>
+
+<script src="{{ 'halo-someone-purchase.js' | asset_url }}" defer="defer"></script>
+{% endif %}
